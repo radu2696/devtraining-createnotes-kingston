@@ -2,16 +2,30 @@
 <record_update table="sp_widget">
     <sp_widget action="INSERT_OR_UPDATE">
         <category>custom</category>
-        <client_script><![CDATA[function() {
-  /* widget controller */
-  var c = this;
-	c.selectItem = function(idx) {
+        <client_script><![CDATA[function($rootScope,$scope) {
+	/* widget controller */
+	var c = this;
+	// Use a position indicator to know which record to update
+	c.notePos = 0;
+
+	c.selectItem = function(idx) {  
+		// Set the position indicator to the index value passed in on select
+		c.notePos = idx;
 		var id = c.data.notes[idx].sys_id;
 		console.log('Note ID: ' + id);
 		$rootScope.noteID = id;
 		$rootScope.$emit('selectNote', id);
 	}
-}]]></client_script>
+  // Subscribe to event.  Set the new title and note values on the 
+	// c.data object
+	$rootScope.$on('updateTitle', function(event,data) { 
+		console.log("updateTitle event received: " + event);
+		console.log(data);
+		c.data.notes[c.notePos].title = data.title;
+		c.data.notes[c.notePos].note = data.note;
+	});	
+}
+]]></client_script>
         <controller_as>c</controller_as>
         <css/>
         <data_table>sp_instance</data_table>
@@ -49,14 +63,14 @@
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2018-09-19 10:51:29</sys_created_on>
         <sys_id>e645a6cb4f602300cdf9b82ca310c74c</sys_id>
-        <sys_mod_count>7</sys_mod_count>
+        <sys_mod_count>13</sys_mod_count>
         <sys_name>Notes List</sys_name>
         <sys_package display_value="CreateNotes" source="x_snc_createnotes">df5fd9a5090232007f44e1046c8ff69f</sys_package>
         <sys_policy/>
         <sys_scope display_value="CreateNotes">df5fd9a5090232007f44e1046c8ff69f</sys_scope>
         <sys_update_name>sp_widget_e645a6cb4f602300cdf9b82ca310c74c</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2018-09-19 12:42:42</sys_updated_on>
+        <sys_updated_on>2018-09-19 13:56:28</sys_updated_on>
         <template><![CDATA[<div class="panel panel-default">
   <div class="panel-heading clearfix">
     <h3 class="panel-title pull-left">
